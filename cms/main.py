@@ -206,16 +206,39 @@ async def opp_import(file: UploadFile = File(...)):
         header, items = {}, []
 
     name = (header.get("name") or os.path.splitext(file.filename)[0]).strip()
+    customer = header.get("customer")
     conn = connect(); cur = conn.cursor()
-    cur.execute("""INSERT INTO opportunity
-        (name,customer,department,doc_type,tech_stack,total_effort_mm,total_effort_md,
-         timeline_months,language,source_date,status,description)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
-        (name, header.get("customer"), header.get("department"), header.get("doc_type") or "estimate",
-         header.get("tech_stack"), header.get("total_effort_mm"), header.get("total_effort_md"),
-         header.get("timeline_months"), header.get("language"), header.get("source_date"),
-         header.get("status") or "draft", header.get("description")))
-    oid = cur.fetchone()[0]
+
+    # Phương án A: trùng (name + customer) -> CẬP NHẬT tại chỗ; không thì TẠO MỚI
+    cur.execute("""SELECT id FROM opportunity
+                   WHERE lower(name)=lower(%s)
+                     AND coalesce(lower(customer),'')=coalesce(lower(%s),'')""",
+                (name, customer))
+    existing = cur.fetchone()
+    if existing:
+        oid = existing[0]
+        cur.execute("""UPDATE opportunity SET department=%s, doc_type=%s, tech_stack=%s,
+                       total_effort_mm=%s, total_effort_md=%s, timeline_months=%s, language=%s,
+                       source_date=%s, status=%s, description=%s WHERE id=%s""",
+                    (header.get("department"), header.get("doc_type") or "estimate",
+                     header.get("tech_stack"), header.get("total_effort_mm"),
+                     header.get("total_effort_md"), header.get("timeline_months"),
+                     header.get("language"), header.get("source_date"),
+                     header.get("status") or "draft", header.get("description"), oid))
+        # thay toàn bộ WBS + xoá tài liệu import cũ cùng tên (chunk cascade) để nạp lại bản mới
+        cur.execute("DELETE FROM opportunity_wbs_item WHERE opportunity_id=%s", (oid,))
+        cur.execute("""DELETE FROM document WHERE source_type='opportunity'
+                       AND source_id=%s AND filename=%s""", (oid, file.filename))
+    else:
+        cur.execute("""INSERT INTO opportunity
+            (name,customer,department,doc_type,tech_stack,total_effort_mm,total_effort_md,
+             timeline_months,language,source_date,status,description)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+            (name, customer, header.get("department"), header.get("doc_type") or "estimate",
+             header.get("tech_stack"), header.get("total_effort_mm"), header.get("total_effort_md"),
+             header.get("timeline_months"), header.get("language"), header.get("source_date"),
+             header.get("status") or "draft", header.get("description")))
+        oid = cur.fetchone()[0]
 
     # 3) tạo các chức năng WBS
     for it in items:
