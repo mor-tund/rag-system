@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Proposals — RAG CMS{% endblock %}
+{% block body %}
+<h1>Proposals
+  <a class="btn" href="/opportunities/new">+ Tạo mới</a>
+  <a class="btn sec" href="/opportunities/import">📥 Import từ file estimate</a>
+</h1>
+<table>
+  <tr><th>ID</th><th>Tên</th><th>Khách hàng</th><th>Bộ phận</th><th>Effort (MM)</th><th>Tháng</th><th>Trạng thái</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r[0] }}</td>
+    <td><a href="/opportunities/{{ r[0] }}">{{ r[1] }}</a></td>
+    <td>{{ r[2] or '-' }}</td><td>{{ r[3] or '-' }}</td>
+    <td>{{ r[4] if r[4] is not none else '-' }}</td>
+    <td>{{ r[5] if r[5] is not none else '-' }}</td>
+    <td><span class="pill">{{ r[6] }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

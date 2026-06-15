@@ -1,0 +1,23 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Môi trường & bí mật
+.env
+
+# Dữ liệu (KHÔNG đưa lên repo — tài liệu NDA; server tự upload qua CMS)
+data/
+
+# Log & tạm
+*.log
+/tmp/
+
+# IDE
+.idea/
+.vscode/
+
+# Model cache (tải trên server qua scripts/download_model.py)
+models/

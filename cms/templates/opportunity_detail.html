@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ opp.name }} — RAG CMS{% endblock %}
+{% block body %}
+<div class="actions">
+  <h1 style="margin-right:auto">{{ opp.name }} <span class="pill">{{ opp.status }}</span></h1>
+  <a class="btn sec" href="/opportunities/{{ opp.id }}/edit">Sửa</a>
+  <form class="inline" method="post" action="/opportunities/{{ opp.id }}/delete"
+        onsubmit="return confirm('Xoá proposal này + toàn bộ tài liệu/vector liên quan?')">
+    <button class="danger" type="submit">Xoá</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="row">
+    <div><span class="muted">Khách hàng</span><div>{{ opp.customer or '-' }}</div></div>
+    <div><span class="muted">Bộ phận</span><div>{{ opp.department or '-' }}</div></div>
+    <div><span class="muted">Loại</span><div>{{ opp.doc_type or '-' }}</div></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div><span class="muted">Effort</span><div>{{ opp.total_effort_mm or '?' }} MM / {{ opp.total_effort_md or '?' }} MD</div></div>
+    <div><span class="muted">Thời gian</span><div>{{ opp.timeline_months or '?' }} tháng</div></div>
+    <div><span class="muted">Ngôn ngữ</span><div>{{ opp.language or '-' }}</div></div>
+  </div>
+  <div style="margin-top:10px"><span class="muted">Tech stack</span><div>{{ opp.tech_stack or '-' }}</div></div>
+  {% if opp.description %}<div style="margin-top:10px"><span class="muted">Mô tả</span><div>{{ opp.description }}</div></div>{% endif %}
+</div>
+
+<h2>Chức năng WBS ({{ wbs|length }})</h2>
+{% if wbs %}
+<table>
+  <tr><th>Nhóm</th><th>Tên</th><th>Effort (MD)</th><th>Ưu tiên</th></tr>
+  {% for w in wbs %}
+  <tr><td>{{ w[0] or '-' }}</td><td>{{ w[1] }}</td><td>{{ w[2] if w[2] is not none else '-' }}</td><td>{{ w[3] or '-' }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}<p class="muted">Chưa có chức năng WBS.</p>{% endif %}
+
+<h2>Tài liệu ({{ docs|length }})</h2>
+<table>
+  <tr><th>File</th><th>Bảo mật</th><th>Trạng thái</th><th>Chunks</th><th></th></tr>
+  {% for d in docs %}
+  <tr>
+    <td>{{ d[1] }}{% if d[5] %}<div class="muted">⚠ {{ d[5] }}</div>{% endif %}</td>
+    <td><span class="pill">{{ d[2] }}</span></td>
+    <td><span class="pill {{ d[3] }}">{{ d[3] }}</span></td>
+    <td>{{ d[4] }}</td>
+    <td class="actions">
+      <form class="inline" method="post" action="/documents/{{ d[0] }}/reprocess"><button class="sec" type="submit">Nạp lại</button></form>
+      <form class="inline" method="post" action="/documents/{{ d[0] }}/delete" onsubmit="return confirm('Xoá tài liệu + vector của nó?')"><button class="danger" type="submit">Xoá</button></form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div class="card">
+  <h2 style="margin-top:0">⬆ Upload tài liệu mới</h2>
+  <p class="muted">Hỗ trợ: pptx, xlsx, pdf, docx, txt, md. File sẽ được parse → chunk → embed (bge-m3) → lưu vector, gắn vào proposal này.</p>
+  <form method="post" action="/documents/upload" enctype="multipart/form-data">
+    <input type="hidden" name="source_type" value="opportunity">
+    <input type="hidden" name="source_id" value="{{ opp.id }}">
+    <div class="row">
+      <div><label>Chọn file</label><input type="file" name="file" required></div>
+      <div><label>Nhãn bảo mật</label>
+        <select name="security_label">
+          {% for s in ['Internal','Public','Confidential','Restricted'] %}<option>{{ s }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:12px"><button type="submit">Upload & xử lý</button></div>
+  </form>
+</div>
+{% endblock %}

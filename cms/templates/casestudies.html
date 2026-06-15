@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Case Studies — RAG CMS{% endblock %}
+{% block body %}
+<h1>Case Studies
+  <a class="btn" href="/casestudies/new">+ Tạo mới</a>
+  <a class="btn sec" href="/casestudies/import">📥 Import từ tài liệu</a>
+</h1>
+<table>
+  <tr><th>ID</th><th>Tên</th><th>Lĩnh vực</th><th>Khách hàng</th><th>Tech</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r[0] }}</td>
+    <td><a href="/casestudies/{{ r[0] }}">{{ r[1] }}</a></td>
+    <td>{{ r[2] or '-' }}</td><td>{{ r[3] or '-' }}</td>
+    <td class="muted">{{ (r[4] or '-')[:50] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

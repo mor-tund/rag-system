@@ -1,0 +1,1 @@
+"""CMS web cho RAG demo: CRUD opportunity/case study + upload tài liệu (pipeline embed)."""

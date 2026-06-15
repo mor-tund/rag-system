@@ -1,0 +1,15 @@
+# torch CPU cài riêng trong scripts/setup.sh (index pytorch CPU) — KHÔNG để ở đây
+# để tránh kéo bản CUDA ~2.5GB.
+psycopg[binary]>=3.2
+pgvector>=0.3
+sentence-transformers>=3.0
+python-pptx>=1.0
+openpyxl>=3.1
+fastapi>=0.110
+uvicorn[standard]>=0.29
+jinja2>=3.1
+python-multipart>=0.0.9
+python-docx>=1.1
+pypdf>=4.0
+mcp>=1.0
+itsdangerous>=2.0

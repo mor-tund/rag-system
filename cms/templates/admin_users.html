@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Admin · Users — RAG CMS{% endblock %}
+{% block body %}
+<h1>👥 User đang được cấp token</h1>
+<p class="actions">
+  <a class="btn sec" href="/admin/tokens">🔑 Quản lý token</a>
+  <a class="btn sec" href="/admin/users">👥 Users</a>
+  <a class="btn sec" href="/logout" style="margin-left:auto">Đăng xuất</a>
+</p>
+<table>
+  <tr><th>User</th><th>Trạng thái truy cập</th><th>Token hiệu lực</th><th>Tổng token</th><th>Lần dùng cuối</th><th>Cấp lần đầu</th></tr>
+  {% for u in users %}
+  <tr>
+    <td><b>{{ u[0] }}</b></td>
+    <td>{% if u[2] > 0 %}<span class="pill ready">đang có quyền</span>{% else %}<span class="pill error">đã thu hồi</span>{% endif %}</td>
+    <td>{{ u[2] }}</td>
+    <td>{{ u[1] }}</td>
+    <td class="muted">{{ u[3].strftime('%Y-%m-%d %H:%M') if u[3] else 'chưa dùng' }}</td>
+    <td class="muted">{{ u[4].strftime('%Y-%m-%d') if u[4] else '-' }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% if not users %}<p class="muted">Chưa cấp token cho user nào.</p>{% endif %}
+{% endblock %}

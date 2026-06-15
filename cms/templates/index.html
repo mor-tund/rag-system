@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RAG CMS{% endblock %}
+{% block body %}
+<h1>Dashboard</h1>
+<div class="row">
+  <div class="card"><div class="muted">Proposals</div><h1>{{ counts.opportunity }}</h1></div>
+  <div class="card"><div class="muted">Case Studies</div><h1>{{ counts.case_study }}</h1></div>
+  <div class="card"><div class="muted">Tài liệu</div><h1>{{ counts.document }}</h1></div>
+  <div class="card"><div class="muted">Vector chunks</div><h1>{{ counts.document_chunk }}</h1></div>
+</div>
+
+<h2>Proposals gần đây <a class="btn" href="/opportunities/new">+ Tạo mới</a></h2>
+<table>
+  <tr><th>ID</th><th>Tên</th><th>Khách hàng</th><th>Trạng thái</th></tr>
+  {% for o in opps %}
+  <tr><td>{{ o[0] }}</td><td><a href="/opportunities/{{ o[0] }}">{{ o[1] }}</a></td>
+      <td>{{ o[2] or '-' }}</td><td><span class="pill">{{ o[3] }}</span></td></tr>
+  {% endfor %}
+</table>
+
+<h2>Case Studies gần đây <a class="btn" href="/casestudies/new">+ Tạo mới</a></h2>
+<table>
+  <tr><th>ID</th><th>Tên</th><th>Lĩnh vực</th></tr>
+  {% for c in css %}
+  <tr><td>{{ c[0] }}</td><td><a href="/casestudies/{{ c[0] }}">{{ c[1] }}</a></td><td>{{ c[2] or '-' }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

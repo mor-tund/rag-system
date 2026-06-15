@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Sửa' if cs else 'Tạo' }} Case Study — RAG CMS{% endblock %}
+{% block body %}
+<h1>{{ 'Sửa' if cs else 'Tạo' }} Case Study</h1>
+<form class="card" method="post" action="{{ action }}">
+  <label>Tên *</label>
+  <input name="name" required value="{{ cs.name if cs else '' }}">
+  <label>Tiêu đề</label>
+  <input name="title" value="{{ cs.title or '' if cs else '' }}">
+  <div class="row">
+    <div><label>Khách hàng</label><input name="customer" value="{{ cs.customer or '' if cs else '' }}"></div>
+    <div><label>Lĩnh vực</label><input name="domain" value="{{ cs.domain or '' if cs else '' }}"></div>
+  </div>
+  <label>Tech stack</label>
+  <input name="tech_stack" value="{{ cs.tech_stack or '' if cs else '' }}">
+  <div class="actions" style="margin-top:14px">
+    <button type="submit">Lưu</button>
+    <a class="btn sec" href="{{ '/casestudies/' ~ cs.id if cs else '/casestudies' }}">Huỷ</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Import Proposal — RAG CMS{% endblock %}
+{% block body %}
+<h1>📥 Import Proposal từ file estimate</h1>
+<div class="card">
+  <p class="muted">
+    Upload file <b>estimate (.xlsx)</b> theo template MOR → hệ tự trích các trường
+    (tên, khách hàng, bộ phận, tech, effort...) <b>và toàn bộ chức năng WBS</b>, tạo proposal đã điền sẵn.
+    File cũng được embed để hỏi-đáp nội dung. Bạn chỉ cần rà lại & sửa nếu thiếu.
+  </p>
+  <form method="post" action="/opportunities/import" enctype="multipart/form-data">
+    <label>Chọn file estimate (.xlsx)</label>
+    <input type="file" name="file" accept=".xlsx,.xls" required>
+    <div style="margin-top:12px" class="actions">
+      <button type="submit">Import & tự fill</button>
+      <a class="btn sec" href="/opportunities">Huỷ</a>
+    </div>
+  </form>
+  <p class="muted" style="margin-top:14px">
+    ⚠️ Tự trích bám theo template estimate của MOR. File định dạng khác → trường nào không nhận dạng được
+    sẽ để trống, bạn nhập tay phần đó. (Sau này có thể nâng cấp dùng AI trích cho mọi định dạng.)
+  </p>
+</div>
+{% endblock %}
