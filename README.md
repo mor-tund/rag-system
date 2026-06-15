@@ -11,7 +11,7 @@ Tài liệu được xử lý & vector hoá **ngay tại chỗ** (embedding loca
 |---|---|
 | Database | PostgreSQL 17 + pgvector |
 | Embedding | bge-m3 (local, đa ngữ) |
-| Web/CMS | FastAPI + Jinja2 |
+| Web/CMS | FastAPI (JSON API) + React + Tailwind (SPA) |
 | LLM tổng hợp | Claude (`claude -p` qua subscription) |
 | Truy cập ngoài | MCP server (HTTP) + token theo user |
 
@@ -24,10 +24,12 @@ rag-system/
 ├─ scripts/                # setup.sh, run_cms.sh, run_mcp.sh, download_model.py
 ├─ ingest.py               # nạp dữ liệu theo lô (CLI)
 ├─ ask.py                  # hỏi-đáp CLI
-├─ cms/                    # ứng dụng web (CRUD, upload, hỏi-đáp, admin token, MCP)
-│  ├─ main.py mcp_server.py rag.py pipeline.py parsers.py extract.py
-│  ├─ embedding.py db.py auth.py
-│  └─ templates/
+├─ cms/                    # backend: JSON API + MCP + pipeline
+│  ├─ main.py              # serve SPA (web/dist) + include /api router
+│  ├─ api/                 # JSON API: opportunities, casestudies, documents, system
+│  ├─ mcp_server.py rag.py pipeline.py parsers.py extract.py
+│  └─ embedding.py db.py auth.py
+├─ web/                    # frontend React + TS + Tailwind (SPA) -> web/dist
 └─ docs/
 ```
 
@@ -35,8 +37,9 @@ rag-system/
 ```bash
 cp .env.example .env       # sửa mật khẩu admin + session secret
 bash scripts/setup.sh      # venv + deps + DB + schema + model
-bash scripts/run_cms.sh    # http://<server>:8210
-bash scripts/run_mcp.sh    # http://<server>:8211/mcp
+bash scripts/build_web.sh  # build SPA React -> web/dist
+bash scripts/run_cms.sh    # SPA + API  -> http://<server>:8210
+bash scripts/run_mcp.sh    # MCP        -> http://<server>:8211/mcp
 ```
 Chi tiết: xem [`DEPLOY.md`](DEPLOY.md).
 

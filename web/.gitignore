@@ -1,0 +1,6 @@
+node_modules
+*.local
+.vite
+
+# NOTE: web/dist is committed (prebuilt SPA) so servers without Node can deploy
+# by `git pull` + run_cms.sh. Rebuild with scripts/build_web.sh after FE changes.
