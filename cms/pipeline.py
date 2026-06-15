@@ -5,7 +5,8 @@ Re-process = xoá chunk cũ của doc rồi nạp lại; không đụng tài li�
 import json
 from .db import connect
 from .embedding import embed
-from .parsers import extract_blocks, chunk_text
+from .parsers import extract_blocks
+from .chunking import semantic_chunk
 
 
 def _set_status(cur, doc_id, status, n_chunks=None, error=None):
@@ -34,7 +35,7 @@ def process_document(doc_id):
         pending = []  # (chunk_index, content, metadata)
         idx = 0
         for label, text in blocks:
-            for c in chunk_text(text):
+            for c in semantic_chunk(text):
                 pending.append((idx, c, {"file": filename, "loc": label})); idx += 1
 
         if not pending:

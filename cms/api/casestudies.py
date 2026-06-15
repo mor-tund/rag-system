@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from ..db import connect
+from ..enrich import upsert_meta_chunk
 from .deps import require_api, text
 from .serializers import cs_row, doc_row
 
@@ -58,6 +59,7 @@ def create_casestudy(body: CaseStudyIn):
                 (body.name, text(body.title), text(body.customer),
                  text(body.domain), text(body.techStack)))
     cid = cur.fetchone()[0]; conn.commit(); conn.close()
+    upsert_meta_chunk("case_study", cid)
     return _detail(cid)
 
 
@@ -72,6 +74,7 @@ def update_casestudy(cid: int, body: CaseStudyIn):
     conn.commit(); conn.close()
     if not found:
         raise HTTPException(404, "Không tìm thấy case study")
+    upsert_meta_chunk("case_study", cid)
     return _detail(cid)
 
 

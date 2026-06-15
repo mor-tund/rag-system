@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from ..db import connect
+from ..enrich import upsert_meta_chunk
 from .deps import num, require_api, text
 from .serializers import doc_row, opp_row, wbs_row
 
@@ -76,6 +77,7 @@ def create_opportunity(body: OpportunityIn):
          text(body.sourceDate), text(body.owner), text(body.status) or "draft",
          text(body.description)))
     oid = cur.fetchone()[0]; conn.commit(); conn.close()
+    upsert_meta_chunk("opportunity", oid)
     return _detail(oid)
 
 
@@ -94,6 +96,7 @@ def update_opportunity(oid: int, body: OpportunityIn):
     conn.commit(); conn.close()
     if not found:
         raise HTTPException(404, "Không tìm thấy proposal")
+    upsert_meta_chunk("opportunity", oid)
     return _detail(oid)
 
 

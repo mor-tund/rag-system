@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from ..db import connect
 from ..extract import extract_casestudy, extract_proposal
 from ..pipeline import process_document
+from ..enrich import upsert_meta_chunk
 from .deps import require_api
 from .opportunities import _detail as opp_detail
 from .casestudies import _detail as cs_detail
@@ -45,6 +46,7 @@ async def upload_document(
     cur.execute("UPDATE document SET file_path=%s WHERE id=%s", (dest, doc_id))
     conn.commit(); conn.close()
     process_document(doc_id)
+    upsert_meta_chunk(source_type, source_id)
     return opp_detail(source_id) if source_type == "opportunity" else cs_detail(source_id)
 
 
@@ -134,6 +136,7 @@ async def import_opportunity(file: UploadFile = File(...)):
     cur.execute("UPDATE document SET file_path=%s WHERE id=%s", (dest, doc_id))
     conn.commit(); conn.close()
     process_document(doc_id)
+    upsert_meta_chunk("opportunity", oid)
     return opp_detail(oid)
 
 
@@ -163,4 +166,5 @@ async def import_casestudy(file: UploadFile = File(...)):
     cur.execute("UPDATE case_study SET file_path=%s WHERE id=%s", (dest, cid))
     conn.commit(); conn.close()
     process_document(doc_id)
+    upsert_meta_chunk("case_study", cid)
     return cs_detail(cid)
