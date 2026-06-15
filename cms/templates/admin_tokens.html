@@ -47,9 +47,7 @@
 
 <div class="card">
   <h2 style="margin-top:0">User dùng token thế nào</h2>
-  <p class="muted">Đưa token cho user, họ chạy:</p>
-  <pre style="background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;overflow:auto;font-size:13px">claude mcp add --transport http --scope user \
-  --header "Authorization: Bearer &lt;token&gt;" \
-  rag-mor http://&lt;server-ip&gt;:8001/mcp</pre>
+  <p class="muted">Đưa token cho user, họ chạy (lệnh 1 dòng, <b>--header đặt ở cuối</b>):</p>
+  <pre style="background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;overflow:auto;font-size:13px">claude mcp add --transport http --scope user rag-mor http://&lt;server-ip&gt;:8211/mcp --header "Authorization: Bearer &lt;token&gt;"</pre>
 </div>
 {% endblock %}

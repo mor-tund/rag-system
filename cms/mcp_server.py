@@ -2,8 +2,8 @@
 Claude ở máy user khác (Claude Code / Desktop) nối tới qua MCP → gọi tool → tự tổng hợp
 bằng subscription CỦA HỌ. Server KHÔNG cần tự tổng hợp cho nhóm này.
 
-Chạy:  .venv/bin/python -m cms.mcp_server         (mặc định http://0.0.0.0:8001/mcp)
-User nối: claude mcp add --transport http rag-mor http://<server-ip>:8001/mcp
+Chạy:  .venv/bin/python -m cms.mcp_server         (mặc định http://0.0.0.0:8211/mcp)
+User nối: claude mcp add --transport http rag-mor http://<server-ip>:8211/mcp
 """
 import os
 from mcp.server.fastmcp import FastMCP
@@ -12,7 +12,7 @@ from .embedding import embed
 from .auth import validate_token, MCP_AUTH_ON
 
 mcp = FastMCP("rag-mor", host=os.environ.get("MCP_HOST", "0.0.0.0"),
-              port=int(os.environ.get("MCP_PORT", "8001")))
+              port=int(os.environ.get("MCP_PORT", "8211")))
 
 
 @mcp.tool()
@@ -132,4 +132,4 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(_make_app(),
                 host=os.environ.get("MCP_HOST", "0.0.0.0"),
-                port=int(os.environ.get("MCP_PORT", "8001")))
+                port=int(os.environ.get("MCP_PORT", "8211")))

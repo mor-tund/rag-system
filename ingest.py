@@ -18,7 +18,7 @@ from pptx import Presentation
 from sentence_transformers import SentenceTransformer
 
 # ----------------------------- Cấu hình -----------------------------
-DB_DSN = os.environ.get("RAG_DB_DSN", "postgresql://rag:ragpass@localhost:5432/rag")
+DB_DSN = os.environ.get("RAG_DB_DSN", "postgresql://rag:ragpass@localhost:5433/rag")
 EMBED_MODEL = "BAAI/bge-m3"          # đa ngữ (VI/KO/JA/EN), vector 1024 chiều, chạy local
 EMBED_DIM = 1024
 HERE = os.path.dirname(os.path.abspath(__file__))

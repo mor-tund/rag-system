@@ -35,8 +35,8 @@ rag-system/
 ```bash
 cp .env.example .env       # sửa mật khẩu admin + session secret
 bash scripts/setup.sh      # venv + deps + DB + schema + model
-bash scripts/run_cms.sh    # http://<server>:8000
-bash scripts/run_mcp.sh    # http://<server>:8001/mcp
+bash scripts/run_cms.sh    # http://<server>:8210
+bash scripts/run_mcp.sh    # http://<server>:8211/mcp
 ```
 Chi tiết: xem [`DEPLOY.md`](DEPLOY.md).
 

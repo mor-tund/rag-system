@@ -17,7 +17,7 @@ import psycopg
 from pgvector.psycopg import register_vector
 from sentence_transformers import SentenceTransformer
 
-DB_DSN = "postgresql://rag:ragpass@localhost:5432/rag"
+DB_DSN = os.environ.get("RAG_DB_DSN", "postgresql://rag:ragpass@localhost:5433/rag")
 EMBED_MODEL = "BAAI/bge-m3"
 TOP_K = 6
 
