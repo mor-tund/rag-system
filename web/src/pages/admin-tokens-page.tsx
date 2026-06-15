@@ -38,8 +38,12 @@ export function AdminTokensPage() {
     await api.deleteToken(t.id);
     reload();
   };
+  const mcpCommand = (t: McpToken) => {
+    const host = window.location.hostname || "<server>";
+    return `claude mcp add --transport http --scope user rag-mor http://${host}:8211/mcp --header "Authorization: Bearer ${t.token}"`;
+  };
   const copy = (t: McpToken) => {
-    navigator.clipboard?.writeText(t.token).catch(() => undefined);
+    navigator.clipboard?.writeText(mcpCommand(t)).catch(() => undefined);
     setCopied(t.id);
     setTimeout(() => setCopied(null), 1500);
   };
@@ -98,7 +102,7 @@ export function AdminTokensPage() {
                       <button
                         onClick={() => copy(t)}
                         className="group inline-flex items-center gap-2 rounded-md bg-surface-2 px-2 py-1 font-mono text-[12px] text-ink-soft transition-colors hover:text-ink"
-                        title="Sao chép token"
+                        title="Sao chép LỆNH claude mcp add (kèm token) — dán & chạy là xong"
                       >
                         {t.token}
                         {copied === t.id ? (
@@ -153,8 +157,8 @@ export function AdminTokensPage() {
       )}
 
       <p className="mt-5 font-mono text-[11px] leading-relaxed text-ink-faint">
-        Endpoint MCP: <span className="text-ink-soft">http://&lt;server&gt;:8211/mcp</span> · xác thực bằng
-        Bearer token ở trên.
+        💡 Bấm vào token để <span className="text-ink-soft">sao chép nguyên lệnh <code>claude mcp add …</code></span>{" "}
+        (đã kèm token + địa chỉ server) — user chỉ cần dán vào terminal và chạy.
       </p>
     </>
   );
